@@ -79,6 +79,109 @@ impl ActualSettings {
     pub fn sort_maps(&mut self, value: bool) {
         self.sort_maps = value;
     }
+    
+    
+    /// Client capability flags
+    pub struct CapabilityFlags: u32 {
+        /// Use the improved version of Old Password Authentication. Assumed to be set since 4.1.1.
+        const CLIENT_LONG_PASSWORD                  = 0x0000_0001;
+
+        /// Send found rows instead of affected rows in EOF_Packet.
+        const CLIENT_FOUND_ROWS                     = 0x0000_0002;
+
+        /// Get all column flags.
+        /// Longer flags in Protocol::ColumnDefinition320.
+        ///
+        /// ### Server
+        /// Supports longer flags.
+        ///
+        /// ### Client
+        /// Expects longer flags.
+        const CLIENT_LONG_FLAG                      = 0x0000_0004;
+
+        /// Database (schema) name can be specified on connect in Handshake Response Packet.
+        /// ### Server
+        /// Supports schema-name in Handshake Response Packet.
+        ///
+        /// ### Client
+        /// Handshake Response Packet contains a schema-name.
+        const CLIENT_CONNECT_WITH_DB                = 0x0000_0008;
+
+        /// Don't allow database.table.column.
+        const CLIENT_NO_SCHEMA                      = 0x0000_0010;
+
+        /// Compression protocol supported.
+        ///
+        /// ### Server
+        /// Supports compression.
+        ///
+        /// ### Client
+        /// Switches to Compression compressed protocol after successful authentication.
+        const CLIENT_COMPRESS                       = 0x0000_0020;
+
+        /// Special handling of ODBC behavior.
+        const CLIENT_ODBC                           = 0x0000_0040;
+
+        /// Can use LOAD DATA LOCAL.
+        ///
+        /// ### Server
+        /// Enables the LOCAL INFILE request of LOAD DATA|XML.
+        ///
+        /// ### Client
+        /// Will handle LOCAL INFILE request.
+        const CLIENT_LOCAL_FILES                    = 0x0000_0080;
+
+        /// Ignore spaces before '('.
+        ///
+        /// ### Server
+        /// Parser can ignore spaces before '('.
+        ///
+        /// ### Client
+        /// Let the parser ignore spaces before '('.
+        const CLIENT_IGNORE_SPACE                   = 0x0000_0100;
+
+        const CLIENT_PROTOCOL_41                    = 0x0000_0200;
+
+        /// This is an interactive client.
+        /// Use System_variables::net_wait_timeout versus System_variables::net_interactive_timeout.
+        ///
+        /// ### Server
+        /// Supports interactive and noninteractive clients.
+        ///
+        /// ### Client
+        /// Client is interactive.
+        const CLIENT_INTERACTIVE                    = 0x0000_0400;
+
+        /// Use SSL encryption for the session.
+        ///
+        /// ### Server
+        /// Supports SSL
+        ///
+        /// ### Client
+        /// Switch to SSL after sending the capability-flags.
+        const CLIENT_SSL                            = 0x0000_0800;
+
+        /// Client only flag. Not used.
+        ///
+        /// ### Client
+        /// Do not issue SIGPIPE if network failures occur (libmysqlclient only).
+        const CLIENT_IGNORE_SIGPIPE                 = 0x0000_1000;
+
+        /// Client knows about transactions.
+        ///
+        /// ### Server
+        /// Can send status flags in OK_Packet / EOF_Packet.
+        ///
+        /// ### Client
+        /// Expects status flags in OK_Packet / EOF_Packet.
+        ///
+        /// ### Note
+        /// This flag is optional in 3.23, but always set by the server since 4.0.
+        const CLIENT_TRANSACTIONS                   = 0x0000_2000;
+
+        const CLIENT_RESERVED                       = 0x0000_4000;
+
+        const CLIENT_SECURE_CONNECTION              = 0x0000_8000;
 
     pub fn snapshot_path<P: AsRef<Path>>(&mut self, path: P) {
         self.snapshot_path = path.as_ref().to_path_buf();
